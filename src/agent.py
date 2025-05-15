@@ -6,11 +6,19 @@ from langchain_core.prompts import ChatPromptTemplate
 import pandas as pd
 import json
 from openai import OpenAI
+from dotenv import load_dotenv
+import os
+
+# создать файл .env
+
+load_dotenv()
+#print ("TELEGRAM_BOT_TOKEN")
+TOKEN = os.getenv("OPEN_API_TOKEN")
 
 # Настройка OpenRouter клиента
 client = OpenAI(
   base_url="https://openrouter.ai/api/v1",
-  api_key="",
+  api_key=TOKEN,
 )
 
 # Определение списка подарков в виде словаря
@@ -216,7 +224,10 @@ def call_openrouter_api(prompt):
             "HTTP-Referer": "https://github.com", 
             "X-Title": "Gift Recommendation Agent", 
         },
-        model="qwen/qwen3-235b-a22b:free",
+        #model="qwen/qwen3-235b-a22b:free",
+        #model="qwen/qwen3-235b-a22b",
+        #model="google/gemini-2.5-flash-preview:thinking",
+        model="deepseek/deepseek-r1",
         messages=[
             {
                 "role": "user",
@@ -480,7 +491,7 @@ def print_results(final_selection):
             print(f"   Выбран несколькими агентами")
         print("")
         
-def run_neuro_gift2(user_text):
+def run_neuro_gift2():
     print("Запуск системы выбора подарков с использованием OpenRouter API...")
     print("Польз")
     final_selection = run_gift_selection()
@@ -492,5 +503,5 @@ def run_neuro_gift(user_text):
 
 # Запускаем систему
 if __name__ == "__main__":
-    run_neuro_gift('')
+    run_neuro_gift2()
     
