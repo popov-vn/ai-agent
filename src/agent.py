@@ -10,7 +10,7 @@ from openai import OpenAI
 # Настройка OpenRouter клиента
 client = OpenAI(
   base_url="https://openrouter.ai/api/v1",
-  api_key="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",
+  api_key="",
 )
 
 # Определение списка подарков в виде словаря
@@ -479,9 +479,18 @@ def print_results(final_selection):
             # В случае ошибки в структуре данных
             print(f"   Выбран несколькими агентами")
         print("")
+        
+def run_neuro_gift2(user_text):
+    print("Запуск системы выбора подарков с использованием OpenRouter API...")
+    print("Польз")
+    final_selection = run_gift_selection()
+    print_results(final_selection)
+    return final_selection
+
+def run_neuro_gift(user_text):
+    return "Test result: " + user_text
 
 # Запускаем систему
 if __name__ == "__main__":
-    print("Запуск системы выбора подарков с использованием OpenRouter API...")
-    final_selection = run_gift_selection()
-    print_results(final_selection)
+    run_neuro_gift('')
+    
