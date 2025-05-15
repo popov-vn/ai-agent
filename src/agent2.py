@@ -720,6 +720,7 @@ def run_neuro_gift(user_text):
         # Запускаем систему выбора подарков
         final_selection, gifts_data = run_gift_selection(person_info)
         print_results(final_selection, gifts_data)
+        return final_selection
     except Exception as e:
         print(f"Критическая ошибка: {str(e)}")
         print(traceback.format_exc())
@@ -749,6 +750,7 @@ def run_neuro_gift(user_text):
             {"подарок": "Умный велокомпьютер", "описание": "Устройство для отслеживания маршрутов, скорости и других показателей во время велопрогулок", "стоимость": "6,000 - 15,000", "релевантность": 9},
         ]
         print_results(default_selection, default_gifts)
+        return default_selection
         
 if __name__ == "__main__":
     person_info = """
