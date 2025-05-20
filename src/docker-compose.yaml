@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  python-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: python:3.9-slim  # Используем официальный образ Python
+    container_name: python-ai-telebot
+    working_dir: /app
+    
+    volumes:
+      - ./:/app  # Монтируем текущую директорию в /app контейнера
+    environment:
+      - PYTHONUNBUFFERED=1  # Для корректного вывода логов Python
+      - TELEGRAM_BOT_TOKEN
+      - OPEN_API_TOKEN
+    command: python3 telebot.py  # Замените на имя вашего главного скрипта
+    # Если нужно, чтобы контейнер оставался запущенным:
+    # tty: true
+    # stdin_open: true

@@ -18,6 +18,11 @@ load_dotenv()
 #print ("TELEGRAM_BOT_TOKEN")
 TOKEN = os.getenv("OPEN_API_TOKEN")
 
+if None != TOKEN:
+    print("OpenAi Token provided")
+else:
+    print("OpenAi Token missed")
+
 # Настройка OpenRouter клиента
 client = OpenAI(
   base_url="https://openrouter.ai/api/v1",
@@ -760,4 +765,5 @@ if __name__ == "__main__":
 Ходит в спортзал и любит путешествовать.
 Работает программистом на Java.
 """
-    run_neuro_gift(person_info)
+    result = run_neuro_gift(person_info)
+    print(result)
