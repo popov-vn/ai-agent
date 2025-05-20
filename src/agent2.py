@@ -73,7 +73,8 @@ def call_openrouter_api(prompt, max_retries=3):
                     "X-Title": "Gift Recommendation Agent", 
                 },
                 #model="qwen/qwen3-235b-a22b:free",
-                model="deepseek/deepseek-r1",
+                model="google/gemini-2.5-flash-preview:thinking",
+                #model="deepseek/deepseek-r1",
                 messages=[
                     {
                         "role": "user",
