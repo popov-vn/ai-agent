@@ -5,9 +5,10 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
 from telegram.constants import ParseMode
 import urllib.parse
+import traceback
 
 # run agent
-from agent3 import run_neuro_gift
+from agent4 import run_neuro_gift
 import os
 
 from dotenv import load_dotenv
@@ -42,6 +43,9 @@ async def start(update: Update, context):
 # Красивый результат
 # Функция для красивого вывода результатов
 def string_results(final_selection):
+    
+    print(final_selection)
+    
     result = ""
     for gift in final_selection:
         result += f"🎁 МЕСТО #{gift['место']}: {gift['подарок']}\n"
@@ -99,6 +103,7 @@ async def handle_message(update: Update, context):
         await update.message.reply_html(f"{str_results}")
         
     except Exception:
+        print(traceback.format_exc())
         await update.message.reply_text(f"Что-то пошло не так... повторите запрос")
 
 # Основная функция
