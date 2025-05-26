@@ -67,9 +67,9 @@ for agent_type in AgentType:
 
 class GiftModel(BaseModel):
     """Модель подарка с валидацией полей"""
-    подарок: str = Field(..., min_length=1, max_length=200, description="Название подарка")
-    описание: str = Field(..., min_length=1, max_length=500, description="Описание подарка")
-    стоимость: str = Field(..., min_length=1, max_length=50, description="Диапазон стоимости")
+    подарок: str = Field(..., min_length=0, description="Название подарка")
+    описание: str = Field(..., min_length=0, description="Описание подарка")
+    стоимость: str = Field(..., min_length=0, description="Диапазон стоимости")
     релевантность: int = Field(..., ge=1, le=10, description="Оценка релевантности от 1 до 10")
     query: str = Field(..., min_length=0, description="query")
 
@@ -85,8 +85,8 @@ class GiftModel(BaseModel):
 
 class AgentResponseModel(BaseModel):
     """Модель ответа ИИ-агента с валидацией"""
-    выбранный_подарок: str = Field(..., min_length=1, max_length=200)
-    обоснование: str = Field(..., min_length=1, max_length=1000)
+    выбранный_подарок: str = Field(..., min_length=0)
+    обоснование: str = Field(..., min_length=0)
     
     # Специфичные поля для разных типов агентов (опциональные)
     коэффициент_практической_ценности: Optional[int] = Field(None, ge=0, le=100)
@@ -98,7 +98,7 @@ class AgentResponseModel(BaseModel):
 
 class PersonInfoModel(BaseModel):
     """Модель информации о человеке с защитой от инъекций"""
-    info: str = Field(..., min_length=10, max_length=2000)
+    info: str = Field(..., min_length=0)
     
     @validator('info')
     def validate_person_info(cls, v):
@@ -900,7 +900,7 @@ class LangGraphGiftSelectionService:
                         "описание": gift_details["описание"],
                         "стоимость": gift_details["стоимость"],
                         "релевантность": gift_details["релевантность"],
-                        "query": gift_details.query,
+                        "query": gift_details["query"],
                         "средний_балл": round(metrics["средний_балл"], 2),
                         "количество_голосов": metrics["количество_голосов"],
                         "выбран_агентами": metrics["голоса_агентов"],
