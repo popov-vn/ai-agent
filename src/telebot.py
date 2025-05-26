@@ -3,6 +3,8 @@
 import logging
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
+from telegram.constants import ParseMode
+import urllib.parse
 
 # run agent
 from agent3 import run_neuro_gift
@@ -34,8 +36,8 @@ async def start(update: Update, context):
 Помогу подобрать идеальный подарок — персонально, с заботой и на основе того, что действительно важно для получателя.
 
 Расскажи мне о человеке, которому хочешь сделать сюрприз, о его личности и увлечениях. С меня - все остальное.                                    
-"""
-)
+""")
+
     
 # Красивый результат
 # Функция для красивого вывода результатов
@@ -52,20 +54,52 @@ def string_results(final_selection):
         except:
             # В случае ошибки в структуре данных
             result += "   Выбран несколькими агентами\n"
+            
+        if 'query' in gift:
+            query = urllib.parse.quote_plus(gift['query'])
+            
+            result += get_links(query)
+        else:
+            print(f"Подарок: {gift}")
+        
         result += "\n"
     
+    return result
+
+def get_links(query):
+    result = ""
+    markets = [
+        {
+            "name" : "OZON",
+            "link" : "https://www.ozon.ru/search/?text="
+        },
+        {
+            "name" : "Яндекс Market",
+            "link" : "https://market.yandex.ru/search?text="
+        },
+    ]
+    
+    for market in markets:
+        result += f"   Ссылка на <a href=\"{market['link'] + query}\">{market['name']}</a>\n"
+        
+        
+    print(f"Links: {result}")    
     return result
 
 # Обработчик текстовых сообщений (интеграция с вашим скриптом)
 async def handle_message(update: Update, context):
     # ответ пользователю
     await update.message.reply_text(f"Вызов принят, скоро вернусь с ответом")
-    
-    user_input = update.message.text
-    # Вызываем функцию из вашего скрипта
-    result = run_neuro_gift(user_input)
-    str_results = string_results(result)
-    await update.message.reply_text(f"{str_results}")
+
+    try:
+        user_input = update.message.text
+        # Вызываем функцию из вашего скрипта
+        result = run_neuro_gift(user_input)
+        str_results = string_results(result)
+        await update.message.reply_html(f"{str_results}")
+        
+    except Exception:
+        await update.message.reply_text(f"Что-то пошло не так... повторите запрос")
 
 # Основная функция
 def main():
