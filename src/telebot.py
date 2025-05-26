@@ -5,7 +5,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
 
 # run agent
-from agent2 import run_neuro_gift
+from agent3 import run_neuro_gift
 import os
 
 from dotenv import load_dotenv

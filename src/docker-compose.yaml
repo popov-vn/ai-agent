@@ -1,11 +1,10 @@
 version: '3.8'
 services:
-  python-app:
+  python-telebot:
     build:
       context: .
       dockerfile: Dockerfile
     image: python:3.9-slim  # Используем официальный образ Python
-    container_name: python-ai-telebot
     working_dir: /app
     
     volumes:
