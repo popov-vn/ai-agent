@@ -1547,8 +1547,13 @@ def run_neuro_gift(person_info: str) -> List[Dict[str, Any]]:
         try:
             loop = asyncio.get_running_loop()
             logger.info("🔄 Обнаружен запущенный event loop, используем await")
+            
+            # Создаем задачу в текущем event loop
+            import nest_asyncio
+            nest_asyncio.apply()  # Разрешаем вложенные event loops
+            
+            # Теперь можем использовать asyncio.run
             return asyncio.run(run_neuro_gift_async(person_info))
-            #return "Используйте await run_neuro_gift_async(person_info) в Jupyter"
             
         except RuntimeError:
             # Event loop не запущен, можем использовать asyncio.run

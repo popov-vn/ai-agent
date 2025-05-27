@@ -120,7 +120,10 @@ async def try_parse_photos(update: Update, context: CallbackContext) -> List[byt
         if update.message.photo != None:
             print(f"Parse photo: {len(update.message.photo)}")
             
-            max_photos = [find_max_file(update.message.photo)]
+            max_photos = []
+            max_photo = find_max_file(update.message.photo)
+            if max_photo != None:
+                max_photos.append(max_photo)
             
             for photo in max_photos:
                 
@@ -168,10 +171,10 @@ async def handle_message(update: Update, context: CallbackContext):
         await update.message.reply_text(f"Что-то пошло не так... повторите запрос")
 
 async def call_agent(context: AgentContext, update: Update):
-    #result = run_neuro_gift(context.person_info)
-    #str_results = string_results(result)
+    result = run_neuro_gift(context.person_info)
+    str_results = string_results(result)
     
-    str_results = "Test"
+    #str_results = "Test"
     await update.message.reply_html(f"{str_results}")
 
 # Основная функция
