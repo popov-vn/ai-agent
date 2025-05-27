@@ -75,11 +75,15 @@ def get_links(query):
     result = ""
     markets = [
         {
+          "name" : "Мегамаркет",
+          "link" : "https://megamarket.ru/catalog/?q="
+        },
+        {
             "name" : "OZON",
             "link" : "https://www.ozon.ru/search/?text="
         },
         {
-            "name" : "Яндекс Market",
+            "name" : "Яндекс Маркет",
             "link" : "https://market.yandex.ru/search?text="
         },
     ]
@@ -171,7 +175,7 @@ async def handle_message(update: Update, context: CallbackContext):
         await update.message.reply_text(f"Что-то пошло не так... повторите запрос")
 
 async def call_agent(context: AgentContext, update: Update):
-    result = run_neuro_gift(context.person_info)
+    result = run_neuro_gift(context)
     str_results = string_results(result)
     
     #str_results = "Test"

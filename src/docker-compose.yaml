@@ -13,6 +13,7 @@ services:
       - PYTHONUNBUFFERED=1  # Для корректного вывода логов Python
       - TELEGRAM_BOT_TOKEN
       - OPEN_API_TOKEN
+      - GIGA_CHAT_TOKEN
     command: python3 telebot.py  # Замените на имя вашего главного скрипта
     # Если нужно, чтобы контейнер оставался запущенным:
     # tty: true
