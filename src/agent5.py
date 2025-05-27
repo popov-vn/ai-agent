@@ -163,7 +163,7 @@ class AgentResponseModel(BaseModel):
 
 class PersonInfoModel(BaseModel):
     """Модель информации о человеке с защитой от инъекций"""
-    info: str = Field(..., min_length=10)
+    info: str = Field(..., min_length=0)
     
     @validator('info')
     def validate_person_info(cls, v):
@@ -187,6 +187,7 @@ class GraphState(dict):
         self.setdefault("current_step", "initialized")
         self.setdefault("error_messages", [])
         self.setdefault("execution_time", 0.0)
+        self.setdefault("files", [])
         self.setdefault("selected_agents", [])  # Новое поле для списка выбранных агентов
         
 print("✅ Обновленные модели данных с поддержкой всех агентов созданы")
@@ -767,6 +768,7 @@ class APIClient:
         async with self._semaphore:
             for attempt in range(self.config.max_retries):
                 try:
+                    self.logger.info(f"🔄 API запрос: {self.config.base_url} {prompt}")
                     self.logger.info(f"🔄 API запрос, попытка {attempt + 1}/{self.config.max_retries}")
                     
                     # Подготовка payload для OpenRouter API
@@ -790,6 +792,8 @@ class APIClient:
                                 
                                 content = data["choices"][0]["message"]["content"]
                                 self.logger.info(f"✅ Получен ответ длиной {len(content)} символов")
+                                self.logger.info(f"✅ Получен ответ {content}")
+                                
                                 return content
                         
                         self.logger.warning(f"⚠️ API вернул статус {response.status}")
@@ -1030,17 +1034,22 @@ class LangGraphGiftGenerator:
             self.logger.info("🎁 LangGraph: Генерация списка подарков")
             
             person_info = state["person_info"]
-            files = state["files"]
+            photos = state["photos"]
             
             # Валидация входных данных
             validated_person_info = PersonInfoModel(info=person_info)
             
-            for file in files:
-                person_info += "\n" + gigafile.analyze_picture(file)
+            for file in photos:
+                photo_description = gigafile.analyze_picture(file)
+                person_info += "\n" + photo_description
+                self.logger.info(f"✅ Добавлено описание по картинке: {photo_description}")
+            
+            self.logger.info(f"✅ Описание обновлено: {person_info}")
+            state["person_info"] = person_info
             
             # Подготовка промпта
             prompt = PromptTemplate.GIFT_GENERATION_PROMPT.format(
-                person_info=validated_person_info.info
+                person_info=person_info
             )
             
             # Запрос к API
@@ -2115,5 +2124,6 @@ if __name__ == "__main__":
 """
     context = AgentContext()
     context.person_info = person_info
+    context.photos = []
     result = run_neuro_gift(context)
     print(result)

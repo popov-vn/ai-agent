@@ -117,6 +117,7 @@ def get_max_files_by_id(files: List[PhotoSize]) -> List[PhotoSize]:
     
     return list(max_files.values())
 
+
 async def try_parse_photos(update: Update, context: CallbackContext) -> List[bytes]:
     try :
         result_list = []
@@ -151,24 +152,35 @@ def print_files_info(files : List[bytes]) :
     for file in files:
         print(f"File: {len(file)}")
         
+def strOrEmpty(data : str) :
+    if data == None:
+        return ""
+    
+    return data
+        
 # Обработчик текстовых сообщений (интеграция с вашим скриптом)
 async def handle_message(update: Update, context: CallbackContext):
     # ответ пользователю
     await update.message.reply_text(f"Вызов принят, скоро вернусь с ответом")
 
     try:
-        user_input = update.message.text
-        print(update.message.photo.count)
+        user_input = strOrEmpty(update.message.text) + strOrEmpty(update.message.caption)
+        
         # Вызываем функцию из вашего скрипта
+        print("== Telegram input ==")
+        print(update.message.text)
+        print(update.message.caption)
         
         files = await try_parse_photos(update, context)
         print_files_info(files)
         
-        context = AgentContext()
-        context.person_info = user_input
-        context.photos = files
+        agentContext = AgentContext()
+        agentContext.person_info = user_input
+        agentContext.photos = files
         
-        await call_agent(context, update)
+        print(f"== Telegram input: {agentContext.person_info} photos:{len(agentContext.photos)}")
+        
+        await call_agent(agentContext, update)
         
     except Exception:
         print(traceback.format_exc())
